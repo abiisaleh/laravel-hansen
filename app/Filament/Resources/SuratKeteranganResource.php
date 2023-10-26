@@ -6,9 +6,12 @@ use App\Filament\Resources\SuratKeteranganResource\Pages;
 use App\Filament\Resources\SuratKeteranganResource\RelationManagers;
 use App\Models\SuratKeterangan;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -59,13 +62,30 @@ class SuratKeteranganResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal_diterima')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Diterima')
+                    ->since(),
             ])
             ->filters([
-                //
+                Filter::make('tanggal')
+                    ->form([
+                        DatePicker::make('tanggal')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['tanggal'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('tanggal', $date),
+                            );
+                    })
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Action::make('file')
+                    ->icon('heroicon-o-document')
+                    ->color('success')
+                    ->url(fn (SuratKeterangan $record): string => '/storage/' . $record->file)
+                    ->openUrlInNewTab()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
