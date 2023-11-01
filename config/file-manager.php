@@ -76,7 +76,7 @@ return [
      * 2 - one file manager window with directories tree module
      * 3 - two file manager windows
      */
-    'windowsConfig'     => 2,
+    'windowsConfig'     => 1,
 
     /**
      * File upload - Max file size in KB
@@ -95,7 +95,7 @@ return [
     /**
      * Show / Hide system files and folders
      */
-    'hiddenFiles'       => true,
+    'hiddenFiles'       => false,
 
     /***************************************************************************
      * Middleware
